@@ -6,6 +6,49 @@
             "type": "shell",
             "command": "scripts/develop",
             "problemMatcher": []
-        }
+        },
+        {
+            "label": "start-home-assistant",
+            "type": "shell",
+            "command": "scripts/develop",
+            "group": "test",
+            "presentation": {
+                "echo": true,
+                "reveal": "silent",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": true
+            },
+            "isBackground": true,
+            "problemMatcher": {
+                "pattern": [
+                    {
+                        "regexp": ".",
+                        "file": 1,
+                        "location": 2,
+                        "message": 3
+                    }
+                ],
+                "background": {
+                    "activeOnStart": true,
+                    "beginsPattern": "^.*Setting up frontend",
+                    "endsPattern": "^.*Starting Home Assistant"
+                }
+            }
+        },
+        {
+            "label": "stop-home-assistant",
+            "type": "shell",
+            "command": "sudo kill $(ps au | grep 'python.*hass' | grep -v grep | awk {'print $2'}); exit 0;",
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "silent",
+                "revealProblems": "onProblem",
+                "focus": false,
+                "close": true
+            }
+        },
     ]
 }

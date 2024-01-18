@@ -1,0 +1,66 @@
+# https://www.home-assistant.io/integrations/default_config/
+default_config:
+
+homeassistant:
+  unit_system: metric
+  latitude:  39.7638727
+  longitude: -105.1847561
+  currency: USD
+  country: US
+
+# https://www.home-assistant.io/integrations/logger/
+logger:
+  default: info
+  logs:
+    custom_components.flex-thermostat: debug
+
+input_boolean:
+  fake_heater:
+  fake_cooler:
+  fake_fan:
+  fake_opening_1:
+  fake_opening_2:
+
+input_number:
+  fake_temp:
+    initial: 20.5
+    min: 7
+    max: 35
+    step: 0.1
+
+climate:
+  - platform: flex_thermostat
+    name: My Thermostat
+    temp_sensor: input_number.fake_temp
+    heater_switch: input_boolean.fake_heater
+    cooler_switch: input_boolean.fake_cooler
+    fan_switch: input_boolean.fake_fan
+
+    min_temp: 15
+    max_temp: 32
+    temp_step: 0.1
+    temp_tolerance: 0.5
+
+    openings:
+    - opening: input_boolean.fake_opening_1
+      delay: 00:00:10
+    - opening: input_boolean.fake_opening_2
+
+    preset_modes:
+    - name: Preset1
+      hvac_mode: heat
+      fan_mode: "off"
+      target_temp: 22
+    - name: Preset2
+      hvac_mode: heat_cool
+      target_temp_low: 19
+      target_temp_high: 23
+
+    default_opening_delay: 00:00:30
+    default_preset_hvac_mode: "off"
+    default_preset_fan_mode: "off"
+
+    initial_settings:
+      hvac_mode: heat
+      fan_mode: "on"
+      target_temp: 21
