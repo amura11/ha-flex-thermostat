@@ -1,6 +1,6 @@
 # HomeAssistant Flex Thermostat
 [![GitHub Release][releases-shield]][releases]
-[![HACS Validation][validation-shield]](validation)
+[![HACS Validation][validation-shield]][validation]
 [![hacs][hacsbadge]][hacs]
 
 [![GitHub Activity][commits-shield]][commits]
