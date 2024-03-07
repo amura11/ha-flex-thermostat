@@ -480,65 +480,34 @@ class FlexThermostat(ClimateEntity, RestoreEntity):
         )
 
     async def _async_update(self) -> None:
-        requested_action: HVACAction
-        current_hvac_mode: HVACMode = self._current_settings.hvac_mode
-
-        # Determine what the new action should be
-        # NOTE: There is some redundant sections, this is done for readability
-        if current_hvac_mode == HVACMode.OFF:
-            requested_action = HVACAction.OFF
-        # Fan only mode
-        elif current_hvac_mode == HVACMode.FAN_ONLY:
-            requested_action = HVACAction.FAN
-        # Heating only mode
-        elif current_hvac_mode == HVACMode.HEAT:
-            if self._is_heating_required is True:
-                requested_action = HVACAction.HEATING
-            else:
-                requested_action = HVACAction.IDLE
-        # Cooling only mode
-        elif current_hvac_mode == HVACMode.COOL:
-            if self._is_cooling_required is True:
-                requested_action = HVACAction.COOLING
-            else:
-                requested_action = HVACAction.IDLE
-        # Dual Mode
-        elif current_hvac_mode == HVACMode.HEAT_COOL:
-            if self._is_heating_required is True:
-                requested_action = HVACAction.HEATING
-            elif self._is_cooling_required is True:
-                requested_action = HVACAction.COOLING
-            else:
-                requested_action = HVACAction.IDLE
-        else:
-            requested_action = HVACAction.IDLE
+        new_action: HVACAction = self._get_hvac_action(self._current_settings.hvac_mode)
 
         # Determine what to do with the new action
-        if requested_action != self._current_action:
+        if new_action != self._current_action:
             _LOGGER.debug(
                 "Current action (%s) differs from requested action (%s), determining action",
                 self._current_action,
-                requested_action,
+                new_action,
             )
             result: UpdateResult = UpdateResult()
 
             # Handle the action for heating/cooling
             if result.is_deferred is False:
-                result += await self._async_handle_action_climate(requested_action)
+                result += await self._async_handle_action_climate(new_action)
 
             # Handle the action for the fan
             if result.is_deferred is False:
-                result += await self._async_handle_action_fan(requested_action)
+                result += await self._async_handle_action_fan(new_action)
 
             if result.is_handled is True and result.is_deferred is True:
                 raise RuntimeError("Action has both handled and deffered")
-            elif result.is_deferred is True and requested_action == HVACAction.OFF:
+            elif result.is_deferred is True and new_action == HVACAction.OFF:
                 raise RuntimeError("Off action cannot be deferred")
 
             _LOGGER.debug("Handle action result: Deferred = %s | Handled = %s", result.is_deferred, result.is_handled)
 
-            if result.is_handled is True or requested_action == HVACAction.OFF:
-                self._current_action = requested_action
+            if result.is_handled is True or new_action == HVACAction.OFF:
+                self._current_action = new_action
 
         else:
             _LOGGER.debug(
@@ -547,6 +516,45 @@ class FlexThermostat(ClimateEntity, RestoreEntity):
             )
 
         self.async_write_ha_state()
+
+    def _get_hvac_action(self) -> HVACAction:
+        """Determine what the HVAC action should be given the current mode."""
+        action: HVACAction
+        current_hvac_mode: HVACMode = self._current_settings.hvac_mode
+
+        if self._is_initialized is False:
+            raise RuntimeError("Determiner has not been initialized")
+
+        # NOTE: There is some redundant sections, this is done for readability
+        if current_hvac_mode == HVACMode.OFF:
+            action = HVACAction.OFF
+        # Fan only mode
+        elif current_hvac_mode == HVACMode.FAN_ONLY:
+            action = HVACAction.FAN
+        # Heating only mode
+        elif current_hvac_mode == HVACMode.HEAT:
+            if self._is_heating_required is True:
+                action = HVACAction.HEATING
+            else:
+                action = HVACAction.IDLE
+        # Cooling only mode
+        elif current_hvac_mode == HVACMode.COOL:
+            if self._is_cooling_required is True:
+                action = HVACAction.COOLING
+            else:
+                action = HVACAction.IDLE
+        # Dual Mode
+        elif current_hvac_mode == HVACMode.HEAT_COOL:
+            if self._is_heating_required is True:
+                action = HVACAction.HEATING
+            elif self._is_cooling_required is True:
+                action = HVACAction.COOLING
+            else:
+                action = HVACAction.IDLE
+        else:
+            action = HVACAction.IDLE
+
+        return action
 
     async def _async_handle_action_fan(self, requested_action: HVACAction) -> UpdateResult:
         # Currently fan control doesn't support deferral so the is_deferred flag should remain false
