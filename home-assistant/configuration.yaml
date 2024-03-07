@@ -36,8 +36,8 @@ climate:
     cooler_switch: input_boolean.fake_cooler
     fan_switch: input_boolean.fake_fan
 
-    min_temp: 15
-    max_temp: 32
+    temp_min: 15
+    temp_max: 32
     temp_step: 0.1
     temp_tolerance: 0.5
 
@@ -46,7 +46,7 @@ climate:
       delay: 00:00:10
     - opening: input_boolean.fake_opening_2
 
-    preset_modes:
+    presets:
     - name: Preset1
       hvac_mode: heat
       fan_mode: "off"

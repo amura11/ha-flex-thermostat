@@ -4,34 +4,44 @@ from homeassistant.backports.enum import StrEnum
 
 _LOGGER: Logger = getLogger(__package__)
 
-# Entity IDs
-ATTR_TEMP_SENSOR = "temp_sensor"
-ATTR_HEATER_SWITCH = "heater_switch"
-ATTR_COOLER_SWITCH = "cooler_switch"
-ATTR_FAN_SWITCH = "fan_switch"
+# Basic Config
+CONF_NAME = "name"
+CONF_TEMP_SENSOR = "temp_sensor"
+CONF_HEATER_SWITCH = "heater_switch"
+CONF_COOLER_SWITCH = "cooler_switch"
+CONF_FAN_SWITCH = "fan_switch"
 
 # General Thermostat Settings
-ATTR_TEMP_TOLERANCE = "temp_tolerance"
-ATTR_TEMP_STEP = "temp_step"
+CONF_TEMP_MIN = "temp_min"
+CONF_TEMP_MAX = "temp_max"
+CONF_TEMP_STEP = "temp_step"
+CONF_TEMP_TOLERANCE = "temp_tolerance"
+CONF_CLIMATE_CYCLE_RUNTIME = "climate_cycle_runtime"
+CONF_CLIMATE_CYCLE_COOLDOWN = "climate_cycle_cooldown"
 
-# Climate Cycle Settings
-ATTR_CLIMATE_CYCLE_RUNTIME = "climate_cycle_runtime"
-ATTR_CLIMATE_CYCLE_COOLDOWN = "climate_cycle_cooldown"
-
-# Initial Settings
-ATTR_INITIAL_PRESET = "initial_preset"
-ATTR_INITIAL_SETTINGS = "initial_settings"
-
-# Preset Settings
-ATTR_TARGET_TEMP = "target_temp"
-ATTR_DEFAULT_PRESET_HVAC_MODE = "default_preset_hvac_mode"
-ATTR_DEFAULT_PRESET_FAN_MODE = "default_preset_fan_mode"
+# Preset/ and Climate Settings
+CONF_PRESETS = "presets"
+CONF_PRESET_NAME = "name"
+CONF_CLIMATE_TARGET_TEMP = "target_temp"
+CONF_CLIMATE_TARGET_TEMP_LOW = "target_temp_low"
+CONF_CLIMATE_TARGET_TEMP_HIGH = "target_temp_high"
+CONF_CLIMATE_FAN_MODE = "fan_mode"
+CONF_CLIMATE_HVAC_MODE = "hvac_mode"
 
 # Opening Settings
-ATTR_OPENINGS = "openings"
-ATTR_OPENING_ENTITY = "opening"
-ATTR_OPENING_DELAY = "delay"
-ATTR_DEFAULT_OPENING_DELAY = "default_opening_delay"
+CONF_OPENINGS = "openings"
+CONF_OPENING_ENTITY = "opening"
+CONF_OPENING_DELAY = "delay"
+CONF_DEFAULT_OPENING_DELAY = "default_opening_delay"
+
+# Configurable Defaults
+CONF_DEFAULT_OPENING_DELAY = "default_opening_delay"
+CONF_DEFAULT_PRESET_HVAC_MODE = "default_preset_hvac_mode"
+CONF_DEFAULT_PRESET_FAN_MODE = "default_preset_fan_mode"
+
+# Initial Settings
+CONF_INITIAL_PRESET = "initial_preset"
+CONF_INITIAL_SETTINGS = "initial_settings"
 
 # State Attribute names
 ATTR_MANUAL_FAN_MODE = "manual_fan_mode"
